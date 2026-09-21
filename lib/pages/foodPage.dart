@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/utils/addIngredient.dart';
 import 'package:flutter_application_1/utils/ingredient.dart';
 
 
@@ -11,12 +12,46 @@ class FoodPage extends StatefulWidget {
 }
 
 class _FoodPageState extends State<FoodPage> {
-  
+
+  //Controllers for each of the input fields when adding an ingredient
+  final TextEditingController nameController = TextEditingController();
+  final TextEditingController caloriesController = TextEditingController();
+  final TextEditingController proteinController = TextEditingController();
+  final TextEditingController fatController = TextEditingController();
+  final TextEditingController carbsController = TextEditingController();
+
   List ingredientList = [
     //[name, calories, protein, fat, carbs]
     ["Ingredient 1", 520.3, 10.1, 15.2, 220.8],
     ["Ingredient 2", 550.1, 10.1, 15.2, 220.8],
   ];
+
+  void clearControllers(){
+    nameController.clear();
+    caloriesController.clear();
+    proteinController.clear();
+    fatController.clear();
+    carbsController.clear();
+  }
+
+  void saveNewIngredient(){
+    setState(() {
+      String name = nameController.text;
+      String calories = caloriesController.text;
+      String protein = proteinController.text;
+      String fat = fatController.text;
+      String carbs = carbsController.text;
+      
+      ingredientList.add([name, double.parse(calories), double.parse(protein), double.parse(fat), double.parse(carbs)]);
+      clearControllers();
+    });
+    Navigator.of(context).pop();
+  }
+
+  void onCancel () {
+    Navigator.of(context).pop();
+    clearControllers();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -27,8 +62,10 @@ class _FoodPageState extends State<FoodPage> {
         backgroundColor: Theme.of(context).colorScheme.primary,
       ),
       body: ListView.builder(
+        //show ingredients
         itemCount: ingredientList.length,
         itemBuilder: (context, index){
+          //create ingredient for an item in the list
           return Ingredient(
             name: ingredientList[index][0],
             caloriesPer100g: ingredientList[index][1],
@@ -38,8 +75,23 @@ class _FoodPageState extends State<FoodPage> {
           );
         },
       ),
+      //Button for adding an ingredient
       floatingActionButton: FloatingActionButton(
-        onPressed: () => {}, 
+        onPressed: () => {showDialog(
+          context: context,
+          builder: (context){
+            //show InputIngredient from utils/addIngredient.dart
+            return InputIngredient(
+              nameController: nameController,
+              caloriesController: caloriesController,
+              proteinController: proteinController,
+              fatController: fatController,
+              carbsController: carbsController,
+              onSave: saveNewIngredient,
+              onCancel: onCancel,
+            );
+          }
+        )}, 
         child: Icon(Icons.add),
       ),
     );
