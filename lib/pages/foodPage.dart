@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/utils/addIngredient.dart';
 import 'package:flutter_application_1/utils/ingredient.dart';
+import 'package:flutter_application_1/utils/selectedButton.dart';
 
 
 
@@ -26,6 +27,8 @@ class _FoodPageState extends State<FoodPage> {
     ["Ingredient 2", 550.1, 10.1, 15.2, 220.8],
   ];
 
+  String selected = "Ingredients";
+
   void clearControllers(){
     nameController.clear();
     caloriesController.clear();
@@ -42,7 +45,7 @@ class _FoodPageState extends State<FoodPage> {
       String fat = fatController.text;
       String carbs = carbsController.text;
       
-      ingredientList.add([name, double.parse(calories), double.parse(protein), double.parse(fat), double.parse(carbs)]);
+      ingredientList.add([name.trim(), double.parse(calories), double.parse(protein), double.parse(fat), double.parse(carbs)]);
       clearControllers();
     });
     Navigator.of(context).pop();
@@ -53,6 +56,12 @@ class _FoodPageState extends State<FoodPage> {
     clearControllers();
   }
 
+  void handleSelection(String value){
+    setState(() {
+      selected = value;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -61,19 +70,35 @@ class _FoodPageState extends State<FoodPage> {
         title: Text("Ingredients and Recipes"),
         backgroundColor: Theme.of(context).colorScheme.primary,
       ),
-      body: ListView.builder(
-        //show ingredients
-        itemCount: ingredientList.length,
-        itemBuilder: (context, index){
-          //create ingredient for an item in the list
-          return Ingredient(
-            name: ingredientList[index][0],
-            caloriesPer100g: ingredientList[index][1],
-            proteinPer100g: ingredientList[index][2],
-            fatPer100g: ingredientList[index][3],
-            carbsPer100g: ingredientList[index][4],
-          );
-        },
+      body: Column(
+        children: [
+          SizedBox(height: 10),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SelectButton(text: "Ingredients", selectedText: selected, changeSelected: handleSelection,),
+              SizedBox(width: 15,),
+              SelectButton(text: "Recipes", selectedText: selected, changeSelected: handleSelection,),
+            ],
+          ),
+          
+          Expanded(
+            child: ListView.builder(
+              //show ingredients
+              itemCount:ingredientList.length,
+              itemBuilder: (context, index){
+                //create ingredient for an item in the list
+                return Ingredient(
+                  name: ingredientList[index][0],
+                  caloriesPer100g: ingredientList[index][1],
+                  proteinPer100g: ingredientList[index][2],
+                  fatPer100g: ingredientList[index][3],
+                  carbsPer100g: ingredientList[index][4],
+                );
+              },
+            ),
+          ),
+        ],
       ),
       //Button for adding an ingredient
       floatingActionButton: FloatingActionButton(
