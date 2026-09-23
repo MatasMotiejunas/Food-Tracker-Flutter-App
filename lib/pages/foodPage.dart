@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/utils/addIngredient.dart';
+import 'package:flutter_application_1/utils/ingredientSubpage.dart';
 import 'package:flutter_application_1/utils/ingredient.dart';
+import 'package:flutter_application_1/utils/recipeSubpage.dart';
 import 'package:flutter_application_1/utils/selectedButton.dart';
 
 
@@ -21,11 +23,17 @@ class _FoodPageState extends State<FoodPage> {
   final TextEditingController fatController = TextEditingController();
   final TextEditingController carbsController = TextEditingController();
 
-  List ingredientList = [
+  List<Ingredient> ingredientList = [
     //[name, calories, protein, fat, carbs]
-    ["Ingredient 1", 520.3, 10.1, 15.2, 220.8],
-    ["Ingredient 2", 550.1, 10.1, 15.2, 220.8],
+    // ["Ingredient 1", 520.3, 10.1, 15.2, 220.8],
+    // ["Ingredient 2", 550.1, 15.0, 3.1, 27.0],
+    // ["Ingredient 3", 250.9, 5.2, 2.6, 3.0],
+    Ingredient(name: "Ingredient 1", caloriesPer100g: 520.3, proteinPer100g: 10.1, fatPer100g: 15.2, carbsPer100g: 220.8),
+    Ingredient(name: "Ingredient 2", caloriesPer100g: 550.1, proteinPer100g: 10.1, fatPer100g: 15.2, carbsPer100g: 220.8),
+    Ingredient(name: "Ingredient 3", caloriesPer100g: 250, proteinPer100g: 5, fatPer100g: 2, carbsPer100g: 3),
   ];
+
+  List recipeList = [];
 
   String selected = "Ingredients";
 
@@ -45,7 +53,9 @@ class _FoodPageState extends State<FoodPage> {
       String fat = fatController.text;
       String carbs = carbsController.text;
       
-      ingredientList.add([name.trim(), double.parse(calories), double.parse(protein), double.parse(fat), double.parse(carbs)]);
+      //ingredientList.add([name.trim(), double.parse(calories), double.parse(protein), double.parse(fat), double.parse(carbs)]);
+      ingredientList.add(Ingredient(name: name.trim(), caloriesPer100g: double.parse(calories), proteinPer100g: double.parse(protein), fatPer100g: double.parse(fat), carbsPer100g: double.parse(carbs)));
+
       clearControllers();
     });
     Navigator.of(context).pop();
@@ -82,43 +92,28 @@ class _FoodPageState extends State<FoodPage> {
             ],
           ),
           
-          Expanded(
-            child: ListView.builder(
-              //show ingredients
-              itemCount:ingredientList.length,
-              itemBuilder: (context, index){
-                //create ingredient for an item in the list
-                return Ingredient(
-                  name: ingredientList[index][0],
-                  caloriesPer100g: ingredientList[index][1],
-                  proteinPer100g: ingredientList[index][2],
-                  fatPer100g: ingredientList[index][3],
-                  carbsPer100g: ingredientList[index][4],
-                );
-              },
-            ),
-          ),
+          selected == "Ingredients" ? IngredientSubpage(list: ingredientList) : RecipeSubpage(recipeList: recipeList,)
         ],
       ),
-      //Button for adding an ingredient
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => {showDialog(
-          context: context,
-          builder: (context){
-            //show InputIngredient from utils/addIngredient.dart
-            return InputIngredient(
-              nameController: nameController,
-              caloriesController: caloriesController,
-              proteinController: proteinController,
-              fatController: fatController,
-              carbsController: carbsController,
-              onSave: saveNewIngredient,
-              onCancel: onCancel,
-            );
-          }
-        )}, 
-        child: Icon(Icons.add),
-      ),
+      floatingActionButton: selected == "Ingredients" ? FloatingActionButton(
+              onPressed: () => {showDialog(
+                context: context,
+                builder: (context){
+                  //show InputIngredient from utils/addIngredient.dart
+                  return InputIngredient(
+                    nameController: nameController,
+                    caloriesController: caloriesController,
+                    proteinController: proteinController,
+                    fatController: fatController,
+                    carbsController: carbsController,
+                    onSave: saveNewIngredient,
+                    onCancel: onCancel,
+                  );
+                }
+              )}, 
+              child: Icon(Icons.add),
+            ) : FloatingActionButton(onPressed: (){}),
+
     );
   }
 }
