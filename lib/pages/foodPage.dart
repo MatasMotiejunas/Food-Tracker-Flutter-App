@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/utils/addIngredient.dart';
+import 'package:flutter_application_1/utils/addRecipe.dart';
 import 'package:flutter_application_1/utils/ingredientSubpage.dart';
 import 'package:flutter_application_1/utils/ingredient.dart';
 import 'package:flutter_application_1/utils/recipeSubpage.dart';
@@ -33,7 +34,12 @@ class _FoodPageState extends State<FoodPage> {
     Ingredient(name: "Ingredient 3", caloriesPer100g: 250, proteinPer100g: 5, fatPer100g: 2, carbsPer100g: 3),
   ];
 
-  List recipeList = [];
+  List recipeList = [
+    ["Recipe 1", [Ingredient(name: "Ingredient 1", caloriesPer100g: 520.3, proteinPer100g: 10.1, fatPer100g: 15.2, carbsPer100g: 220.8),
+    Ingredient(name: "Ingredient 2", caloriesPer100g: 550.1, proteinPer100g: 10.1, fatPer100g: 15.2, carbsPer100g: 220.8),]],
+    ["Recipe 2", [Ingredient(name: "Ingredient 2", caloriesPer100g: 550.1, proteinPer100g: 10.1, fatPer100g: 15.2, carbsPer100g: 220.8),
+    Ingredient(name: "Ingredient 3", caloriesPer100g: 250, proteinPer100g: 5, fatPer100g: 2, carbsPer100g: 3),]],
+  ];
 
   String selected = "Ingredients";
 
@@ -112,7 +118,16 @@ class _FoodPageState extends State<FoodPage> {
                 }
               )}, 
               child: Icon(Icons.add),
-            ) : FloatingActionButton(onPressed: (){}),
+            ) : FloatingActionButton(onPressed: () => {showDialog(
+              context: context,
+              builder: (context){
+                List<bool> isChecked = [];
+                for(var _ in ingredientList){
+                  isChecked.add(false);
+                }
+                return InputRecipe(ingredients: ingredientList, isChecked: isChecked);
+              }
+            )}),
 
     );
   }
