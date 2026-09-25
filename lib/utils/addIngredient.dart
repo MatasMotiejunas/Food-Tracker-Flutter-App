@@ -8,8 +8,8 @@ class InputIngredient extends StatelessWidget {
   final TextEditingController fatController;
   final TextEditingController carbsController; 
 
-  VoidCallback onSave;
-  VoidCallback onCancel;
+  final VoidCallback onSave;
+  final VoidCallback onCancel;
 
   InputIngredient({
     super.key, 
@@ -97,7 +97,7 @@ class InputIngredient extends StatelessWidget {
                   child: Text("Cancel"),
                 ),
               ],
-            )
+            ),
           ],
         ),
       ),

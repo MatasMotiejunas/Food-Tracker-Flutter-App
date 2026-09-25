@@ -23,6 +23,7 @@ class _FoodPageState extends State<FoodPage> {
   final TextEditingController proteinController = TextEditingController();
   final TextEditingController fatController = TextEditingController();
   final TextEditingController carbsController = TextEditingController();
+  final TextEditingController recipeNameController = TextEditingController();
 
   List<Ingredient> ingredientList = [
     //[name, calories, protein, fat, carbs]
@@ -60,10 +61,38 @@ class _FoodPageState extends State<FoodPage> {
       String carbs = carbsController.text;
       
       //ingredientList.add([name.trim(), double.parse(calories), double.parse(protein), double.parse(fat), double.parse(carbs)]);
-      ingredientList.add(Ingredient(name: name.trim(), caloriesPer100g: double.parse(calories), proteinPer100g: double.parse(protein), fatPer100g: double.parse(fat), carbsPer100g: double.parse(carbs)));
+      ingredientList.add(Ingredient(
+        name: name.trim(), 
+        caloriesPer100g: double.tryParse(calories)?? 0.0, 
+        proteinPer100g: double.tryParse(protein) ?? 0.0, 
+        fatPer100g: double.tryParse(fat) ?? 0.0, 
+        carbsPer100g: double.tryParse(carbs) ?? 0.0));
 
       clearControllers();
     });
+    Navigator.of(context).pop();
+  }
+
+  void saveNewRecipe(List<bool> chosenIngredients){
+    bool allFalse = !chosenIngredients.contains(true);
+    if (allFalse) return;
+
+    setState((){
+      List<Ingredient> toAdd = [];
+
+      for(int i=0; i<chosenIngredients.length; i++){
+        if(chosenIngredients[i]){
+          toAdd.add(ingredientList[i]);
+        }
+      }
+      
+      recipeList.add([recipeNameController.text.trim(), toAdd]);
+      
+
+      recipeNameController.clear();
+      
+    });
+
     Navigator.of(context).pop();
   }
 
@@ -102,7 +131,7 @@ class _FoodPageState extends State<FoodPage> {
         ],
       ),
       floatingActionButton: selected == "Ingredients" ? FloatingActionButton(
-              onPressed: () => {showDialog(
+              onPressed: () {showDialog(
                 context: context,
                 builder: (context){
                   //show InputIngredient from utils/addIngredient.dart
@@ -116,7 +145,7 @@ class _FoodPageState extends State<FoodPage> {
                     onCancel: onCancel,
                   );
                 }
-              )}, 
+              );}, 
               child: Icon(Icons.add),
             ) : FloatingActionButton(onPressed: () => {showDialog(
               context: context,
@@ -125,7 +154,15 @@ class _FoodPageState extends State<FoodPage> {
                 for(var _ in ingredientList){
                   isChecked.add(false);
                 }
-                return InputRecipe(ingredients: ingredientList, isChecked: isChecked);
+                return InputRecipe(
+                  ingredients: ingredientList, 
+                  isChecked: isChecked, 
+                  nameController: recipeNameController, 
+                  onSave: saveNewRecipe,
+                  onCancel: (){
+                    recipeNameController.clear(); 
+                    Navigator.of(context).pop();}
+                  );
               }
             )}),
 
