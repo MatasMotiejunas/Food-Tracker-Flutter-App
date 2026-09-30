@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/utils/day.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -16,6 +17,7 @@ class _HomePageState extends State<HomePage> {
         backgroundColor: Theme.of(context).colorScheme.primary,
         title: Text("Home Page"),
       ),
-      body: Center(child: Text("Calories and Macros will be displayed here"),));
+      body: Day(date: DateTime.now()),
+    );
   }
 }

@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/utils/constants.dart';
 import 'package:flutter_application_1/utils/ingredient.dart';
 
 class InputRecipe extends StatefulWidget {
 
-  final List<Ingredient> ingredients;
+  final List ingredients;
   final TextEditingController nameController;
   List<bool> isChecked;
 
@@ -41,7 +42,7 @@ class _InputRecipeState extends State<InputRecipe> {
                         });
                           
                       },),
-                      Text(widget.ingredients[index].name),
+                      Text(widget.ingredients[index][NAME]),
                     ]
                   ),
                 

@@ -1,21 +1,39 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/data/database.dart';
 import 'package:flutter_application_1/utils/addIngredient.dart';
 import 'package:flutter_application_1/utils/addRecipe.dart';
 import 'package:flutter_application_1/utils/ingredientSubpage.dart';
 import 'package:flutter_application_1/utils/ingredient.dart';
 import 'package:flutter_application_1/utils/recipeSubpage.dart';
 import 'package:flutter_application_1/utils/selectedButton.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
 
 
 class FoodPage extends StatefulWidget {
-  const FoodPage({super.key});
+  FoodPage({super.key});
 
   @override
   State<FoodPage> createState() => _FoodPageState();
 }
 
 class _FoodPageState extends State<FoodPage> {
+
+  final myBox = Hive.box('myBox');
+  Database db = Database();
+
+  @override
+  void initState() {
+
+    if(myBox.get("INGREDIENTLIST") == null){
+      db.createInitialdata();
+    }else{
+      db.loadData();
+    }
+
+    // TODO: implement initState
+    super.initState();
+  }
 
   //Controllers for each of the input fields when adding an ingredient
   final TextEditingController nameController = TextEditingController();
@@ -25,21 +43,33 @@ class _FoodPageState extends State<FoodPage> {
   final TextEditingController carbsController = TextEditingController();
   final TextEditingController recipeNameController = TextEditingController();
 
-  List<Ingredient> ingredientList = [
+  List ingredientList1 = [
     //[name, calories, protein, fat, carbs]
-    // ["Ingredient 1", 520.3, 10.1, 15.2, 220.8],
-    // ["Ingredient 2", 550.1, 15.0, 3.1, 27.0],
-    // ["Ingredient 3", 250.9, 5.2, 2.6, 3.0],
-    Ingredient(name: "Ingredient 1", caloriesPer100g: 520.3, proteinPer100g: 10.1, fatPer100g: 15.2, carbsPer100g: 220.8),
-    Ingredient(name: "Ingredient 2", caloriesPer100g: 550.1, proteinPer100g: 10.1, fatPer100g: 15.2, carbsPer100g: 220.8),
-    Ingredient(name: "Ingredient 3", caloriesPer100g: 250, proteinPer100g: 5, fatPer100g: 2, carbsPer100g: 3),
+    ["Ingredient 1", 520.3, 10.1, 15.2, 220.8],
+    ["Ingredient 2", 550.1, 15.0, 3.1, 27.0],
+    ["Ingredient 3", 250.9, 5.2, 2.6, 3.0],
   ];
 
-  List recipeList = [
-    ["Recipe 1", [Ingredient(name: "Ingredient 1", caloriesPer100g: 520.3, proteinPer100g: 10.1, fatPer100g: 15.2, carbsPer100g: 220.8),
-    Ingredient(name: "Ingredient 2", caloriesPer100g: 550.1, proteinPer100g: 10.1, fatPer100g: 15.2, carbsPer100g: 220.8),]],
-    ["Recipe 2", [Ingredient(name: "Ingredient 2", caloriesPer100g: 550.1, proteinPer100g: 10.1, fatPer100g: 15.2, carbsPer100g: 220.8),
-    Ingredient(name: "Ingredient 3", caloriesPer100g: 250, proteinPer100g: 5, fatPer100g: 2, carbsPer100g: 3),]],
+  // List<Ingredient> ingredientList = [
+  //   Ingredient(name: "Ingredient 1", caloriesPer100g: 520.3, proteinPer100g: 10.1, fatPer100g: 15.2, carbsPer100g: 220.8),
+  //   Ingredient(name: "Ingredient 2", caloriesPer100g: 550.1, proteinPer100g: 10.1, fatPer100g: 15.2, carbsPer100g: 220.8),
+  //   Ingredient(name: "Ingredient 3", caloriesPer100g: 250, proteinPer100g: 5, fatPer100g: 2, carbsPer100g: 3),
+  // ];
+
+  // List recipeList = [
+  //   ["Recipe 1", [Ingredient(name: "Ingredient 1", caloriesPer100g: 520.3, proteinPer100g: 10.1, fatPer100g: 15.2, carbsPer100g: 220.8),
+  //   Ingredient(name: "Ingredient 2", caloriesPer100g: 550.1, proteinPer100g: 10.1, fatPer100g: 15.2, carbsPer100g: 220.8),]],
+  //   ["Recipe 2", [Ingredient(name: "Ingredient 2", caloriesPer100g: 550.1, proteinPer100g: 10.1, fatPer100g: 15.2, carbsPer100g: 220.8),
+  //   Ingredient(name: "Ingredient 3", caloriesPer100g: 250, proteinPer100g: 5, fatPer100g: 2, carbsPer100g: 3),]],
+  // ];
+
+  List recipeList1 = [
+    ["Recipe 1", [
+      ["Ingredient 1", 520.3, 10.1, 15.2, 220.8],
+      ["Ingredient 2", 550.1, 10.1, 15.2, 220.8]]],
+    ["Recipe 2", [
+      ["Ingredient 2", 550.1, 10.1, 15.2, 220.8],
+      ["Ingredient 3", 250, 5, 2, 3]]],
   ];
 
   String selected = "Ingredients";
@@ -61,16 +91,23 @@ class _FoodPageState extends State<FoodPage> {
       String carbs = carbsController.text;
       
       //ingredientList.add([name.trim(), double.parse(calories), double.parse(protein), double.parse(fat), double.parse(carbs)]);
-      ingredientList.add(Ingredient(
-        name: name.trim(), 
-        caloriesPer100g: double.tryParse(calories)?? 0.0, 
-        proteinPer100g: double.tryParse(protein) ?? 0.0, 
-        fatPer100g: double.tryParse(fat) ?? 0.0, 
-        carbsPer100g: double.tryParse(carbs) ?? 0.0));
+      // ingredientList.add(Ingredient(
+      //   name: name.trim(), 
+      //   caloriesPer100g: double.tryParse(calories)?? 0.0, 
+      //   proteinPer100g: double.tryParse(protein) ?? 0.0, 
+      //   fatPer100g: double.tryParse(fat) ?? 0.0, 
+      //   carbsPer100g: double.tryParse(carbs) ?? 0.0));
+
+      db.ingredientList.add([name.trim(), 
+      double.tryParse(calories)?? 0.0, 
+      double.tryParse(protein)?? 0.0, 
+      double.tryParse(fat)?? 0.0, 
+      double.tryParse(carbs)?? 0.0]);
 
       clearControllers();
     });
     Navigator.of(context).pop();
+    db.updateDatabase();
   }
 
   void saveNewRecipe(List<bool> chosenIngredients){
@@ -78,15 +115,15 @@ class _FoodPageState extends State<FoodPage> {
     if (allFalse) return;
 
     setState((){
-      List<Ingredient> toAdd = [];
+      List toAdd = [];
 
       for(int i=0; i<chosenIngredients.length; i++){
         if(chosenIngredients[i]){
-          toAdd.add(ingredientList[i]);
+          toAdd.add(db.ingredientList[i]);
         }
       }
       
-      recipeList.add([recipeNameController.text.trim(), toAdd]);
+      db.recipeList.add([recipeNameController.text.trim(), toAdd]);
       
 
       recipeNameController.clear();
@@ -94,6 +131,7 @@ class _FoodPageState extends State<FoodPage> {
     });
 
     Navigator.of(context).pop();
+    db.updateDatabase();
   }
 
   void onCancel () {
@@ -127,7 +165,7 @@ class _FoodPageState extends State<FoodPage> {
             ],
           ),
           
-          selected == "Ingredients" ? IngredientSubpage(list: ingredientList) : RecipeSubpage(recipeList: recipeList,)
+          selected == "Ingredients" ? IngredientSubpage(list: db.ingredientList) : RecipeSubpage(recipeList: db.recipeList,)
         ],
       ),
       floatingActionButton: selected == "Ingredients" ? FloatingActionButton(
@@ -151,11 +189,11 @@ class _FoodPageState extends State<FoodPage> {
               context: context,
               builder: (context){
                 List<bool> isChecked = [];
-                for(var _ in ingredientList){
+                for(var _ in db.ingredientList){
                   isChecked.add(false);
                 }
                 return InputRecipe(
-                  ingredients: ingredientList, 
+                  ingredients: db.ingredientList, 
                   isChecked: isChecked, 
                   nameController: recipeNameController, 
                   onSave: saveNewRecipe,

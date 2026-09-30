@@ -1,8 +1,8 @@
 import "package:flutter/material.dart";
-import "package:flutter_application_1/utils/ingredient.dart";
+import "package:flutter_application_1/utils/constants.dart";
 
 class Recipe extends StatelessWidget {
-  final List<Ingredient> ingredients;
+  final List ingredients;
   final String name;
 
   const Recipe({super.key, required this.name, required this.ingredients});
@@ -10,8 +10,8 @@ class Recipe extends StatelessWidget {
 
   List<Text> ingredientNames(){
     List<Text> names = [Text(name)];
-    for(Ingredient ing in ingredients) {
-      names.add(Text(ing.name));
+    for(var ing in ingredients) {
+      names.add(Text(ing[NAME]));
     }
     return names;
   }
