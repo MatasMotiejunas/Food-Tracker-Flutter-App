@@ -9,6 +9,11 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+
+  
+
+  Day today = Day(date :DateTime.now());
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -17,7 +22,8 @@ class _HomePageState extends State<HomePage> {
         backgroundColor: Theme.of(context).colorScheme.primary,
         title: Text("Home Page"),
       ),
-      body: Day(date: DateTime.now()),
-    );
+      body: today,
+      floatingActionButton: FloatingActionButton(onPressed: ()=>{}),
+      );
   }
 }

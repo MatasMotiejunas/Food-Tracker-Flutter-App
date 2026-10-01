@@ -7,6 +7,7 @@ class Database {
 
   final myBox = Hive.box('myBox');
 
+
   //run if app opened for the first time ever
   void createInitialdata(){
     ingredientList = [
@@ -18,10 +19,10 @@ class Database {
     recipeList = [
       ["Recipe 1", [
         ["Ingredient 1", 520.3, 10.1, 15.2, 220.8],
-        ["Ingredient 2", 550.1, 10.1, 15.2, 220.8]]],
+        ["Ingredient 2", 550.1, 15.0, 3.1, 27.0]]],
       ["Recipe 2", [
-        ["Ingredient 2", 550.1, 10.1, 15.2, 220.8],
-        ["Ingredient 3", 250, 5, 2, 3]]],
+        ["Ingredient 2", 550.1, 15.0, 3.1, 27.0],
+        ["Ingredient 3", 250.9, 5.2, 2.6, 3.0]]],
     ];
   }
 

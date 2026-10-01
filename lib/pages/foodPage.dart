@@ -31,7 +31,6 @@ class _FoodPageState extends State<FoodPage> {
       db.loadData();
     }
 
-    // TODO: implement initState
     super.initState();
   }
 
@@ -145,6 +144,12 @@ class _FoodPageState extends State<FoodPage> {
     });
   }
 
+  void resetHive(){
+    setState(() {
+      myBox.clear();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -203,6 +208,10 @@ class _FoodPageState extends State<FoodPage> {
                   );
               }
             )}),
+            persistentFooterButtons: [
+              MaterialButton(onPressed: resetHive,
+              child: Text("Clear Hive"),),
+            ],
 
     );
   }
