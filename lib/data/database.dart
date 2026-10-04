@@ -18,11 +18,11 @@ class Database {
 
     recipeList = [
       ["Recipe 1", [
-        ["Ingredient 1", 520.3, 10.1, 15.2, 220.8],
-        ["Ingredient 2", 550.1, 15.0, 3.1, 27.0]]],
+        ["Ingredient 1", 520.3, 10.1, 15.2, 220.8, 50.0],
+        ["Ingredient 2", 550.1, 15.0, 3.1, 27.0, 75.0]]],
       ["Recipe 2", [
-        ["Ingredient 2", 550.1, 15.0, 3.1, 27.0],
-        ["Ingredient 3", 250.9, 5.2, 2.6, 3.0]]],
+        ["Ingredient 2", 550.1, 15.0, 3.1, 27.0, 80.5],
+        ["Ingredient 3", 250.9, 5.2, 2.6, 3.0, 22.5]]],
     ];
   }
 
@@ -37,5 +37,6 @@ class Database {
     myBox.put("INGREDIENTLIST", ingredientList);
     myBox.put("RECIPELIST", recipeList);
   }
+
 
 }

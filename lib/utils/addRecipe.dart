@@ -6,12 +6,19 @@ class InputRecipe extends StatefulWidget {
 
   final List ingredients;
   final TextEditingController nameController;
+  final List<TextEditingController> weightControllers;
   List<bool> isChecked;
 
-  final ValueChanged<List<bool>> onSave;
+  final void Function(List<bool>, List<TextEditingController>) onSave;
   final VoidCallback onCancel;
 
-  InputRecipe({super.key, required this.ingredients, required this.nameController, required this.isChecked, required this.onSave, required this.onCancel});
+  InputRecipe({super.key, 
+  required this.ingredients, 
+  required this.nameController, 
+  required this.weightControllers,
+  required this.isChecked, 
+  required this.onSave, 
+  required this.onCancel});
 
   @override
   State<InputRecipe> createState() => _InputRecipeState();
@@ -43,6 +50,20 @@ class _InputRecipeState extends State<InputRecipe> {
                           
                       },),
                       Text(widget.ingredients[index][NAME]),
+                      SizedBox(width: 15,),
+                      Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: TextField(
+                            keyboardType: TextInputType.numberWithOptions(decimal: true),
+                            decoration: InputDecoration(
+                              border: OutlineInputBorder(),
+                              hintText: "Weight",
+                            ),
+                            controller: widget.weightControllers[index],
+                          ),
+                        ),
+                      ),
                     ]
                   ),
                 
@@ -63,7 +84,7 @@ class _InputRecipeState extends State<InputRecipe> {
               children: [
                 MaterialButton(
                   color: Theme.of(context).primaryColor,
-                  onPressed: () => widget.onSave(widget.isChecked),
+                  onPressed: () => widget.onSave(widget.isChecked, widget.weightControllers),
                   child: Text("Save"),
                 ),
                 

@@ -12,10 +12,10 @@ class Recipe extends StatelessWidget {
 
   Recipe({super.key, required this.name, required this.ingredients}){
     for(var ing in ingredients){
-      calories += ing[CALORIES];
-      protein += ing[PROTEIN];
-      fat += ing[FAT];
-      carbs += ing[CARBS];
+      calories += ing[CALORIES] * ing[WEIGHT] / 100;
+      protein += ing[PROTEIN] * ing[WEIGHT] / 100;
+      fat += ing[FAT] * ing[WEIGHT] / 100;
+      carbs += ing[CARBS] * ing[WEIGHT] / 100;
     }
 
     calories = double.parse(calories.toStringAsFixed(1));
@@ -29,8 +29,10 @@ class Recipe extends StatelessWidget {
     List<Text> names = [Text("$name: Cal = $calories")];
     for(var ing in ingredients) {
       var nm = ing[NAME];
-      var cal = ing[CALORIES];
-      names.add(Text("$nm Cal = $cal"));
+      var cal = ing[CALORIES] * ing[WEIGHT] / 100;
+      cal = double.parse(cal.toStringAsFixed(1));
+      var weight = ing[WEIGHT];
+      names.add(Text("$nm Cal = $cal, weight = $weight"));
     }
     return names;
   }

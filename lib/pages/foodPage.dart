@@ -73,7 +73,7 @@ class _FoodPageState extends State<FoodPage> {
 
   String selected = "Ingredients";
 
-  void clearControllers(){
+  void clearIngredientControllers(){
     nameController.clear();
     caloriesController.clear();
     proteinController.clear();
@@ -103,13 +103,21 @@ class _FoodPageState extends State<FoodPage> {
       double.tryParse(fat)?? 0.0, 
       double.tryParse(carbs)?? 0.0]);
 
-      clearControllers();
+      clearIngredientControllers();
     });
     Navigator.of(context).pop();
     db.updateDatabase();
   }
 
-  void saveNewRecipe(List<bool> chosenIngredients){
+  List<TextEditingController> generateControllers(){
+    List<TextEditingController> list = [];
+    for(var _ in db.ingredientList){
+      list.add(TextEditingController());
+    }
+    return list;
+  }
+
+  void saveNewRecipe(List<bool> chosenIngredients, List<TextEditingController> weightControllers){
     bool allFalse = !chosenIngredients.contains(true);
     if (allFalse) return;
 
@@ -118,7 +126,12 @@ class _FoodPageState extends State<FoodPage> {
 
       for(int i=0; i<chosenIngredients.length; i++){
         if(chosenIngredients[i]){
-          toAdd.add(db.ingredientList[i]);
+          var ingredientWithWeight = db.ingredientList[i];
+          String w = weightControllers[i].text;
+
+          var weight = double.tryParse(w) ?? 0.0;
+          ingredientWithWeight.add(weight);
+          toAdd.add(ingredientWithWeight);
         }
       }
       
@@ -135,7 +148,7 @@ class _FoodPageState extends State<FoodPage> {
 
   void onCancel () {
     Navigator.of(context).pop();
-    clearControllers();
+    clearIngredientControllers();
   }
 
   void handleSelection(String value){
@@ -201,6 +214,7 @@ class _FoodPageState extends State<FoodPage> {
                   ingredients: db.ingredientList, 
                   isChecked: isChecked, 
                   nameController: recipeNameController, 
+                  weightControllers: generateControllers(),
                   onSave: saveNewRecipe,
                   onCancel: (){
                     recipeNameController.clear(); 

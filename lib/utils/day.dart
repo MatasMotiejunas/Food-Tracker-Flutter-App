@@ -22,21 +22,26 @@ class _DayState extends State<Day> {
   List eaten = [];
 
   void addValues(List ingredient){
-    widget.calories += ingredient[CALORIES];
-    widget.protein += ingredient[PROTEIN];
-    widget.fat += ingredient[FAT];
-    widget.carbs += ingredient[CARBS];
+    widget.calories += ingredient[CALORIES] * ingredient[WEIGHT] / 100;
+    widget.protein += ingredient[PROTEIN] * ingredient[WEIGHT] / 100;
+    widget.fat += ingredient[FAT] * ingredient[WEIGHT] / 100;
+    widget.carbs += ingredient[CARBS] * ingredient[WEIGHT] / 100;
+
+    widget.calories = double.parse(widget.calories.toStringAsFixed(1));
+    widget.protein = double.parse(widget.protein.toStringAsFixed(1));
+    widget.fat = double.parse(widget.fat.toStringAsFixed(1));
+    widget.carbs = double.parse(widget.carbs.toStringAsFixed(1));
   }
 
-  void addIngredient(List ingredient, int index){
+  void addIngredient(List ingredient){
     setState(() {
       addValues(ingredient);
-      eaten.add([INGREDIENT, index]);
+      eaten.add([INGREDIENT, ingredient]);
     });
   
   }
 
-  void addRecipe(List recipe, int index){
+  void addRecipe(List recipe){
     setState(() {
       List ingredients = recipe[1];
 
@@ -44,7 +49,7 @@ class _DayState extends State<Day> {
         addValues(ing);
       }
 
-      eaten.add([RECIPE, index]);      
+      eaten.add([RECIPE, recipe]);      
     });
 
   }
