@@ -221,7 +221,10 @@ class _FoodPageState extends State<FoodPage> {
                     Navigator.of(context).pop();}
                   );
               }
-            )}),
+              
+            )},
+            child: Icon(Icons.add),
+            ),
             persistentFooterButtons: [
               MaterialButton(onPressed: resetHive,
               child: Text("Clear Hive"),),

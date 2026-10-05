@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/utils/constants.dart';
 import 'package:flutter_application_1/utils/ingredient.dart';
+import 'package:flutter_application_1/utils/searchBar.dart';
 
 class InputRecipe extends StatefulWidget {
 
@@ -12,13 +13,18 @@ class InputRecipe extends StatefulWidget {
   final void Function(List<bool>, List<TextEditingController>) onSave;
   final VoidCallback onCancel;
 
+  List<int> showIngredientIndex = [];
+
   InputRecipe({super.key, 
   required this.ingredients, 
   required this.nameController, 
   required this.weightControllers,
   required this.isChecked, 
   required this.onSave, 
-  required this.onCancel});
+  required this.onCancel}){
+    
+    showIngredientIndex = List.generate(ingredients.length, (i) => i);
+  }
 
   @override
   State<InputRecipe> createState() => _InputRecipeState();
@@ -26,6 +32,21 @@ class InputRecipe extends StatefulWidget {
 
 class _InputRecipeState extends State<InputRecipe> {
 
+  void checkName(String search){
+    setState(() {
+      if (search.isEmpty) {
+        widget.showIngredientIndex = List.generate(widget.ingredients.length, (i) => i);
+      }else{
+        widget.showIngredientIndex = [
+          for(int i=0; i<widget.ingredients.length; i++)
+            if(widget.ingredients[i][NAME].toLowerCase().contains(search.toLowerCase()))
+              i
+        ];
+        
+      }
+      
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -37,11 +58,13 @@ class _InputRecipeState extends State<InputRecipe> {
         color: Colors.green,
         child: Column(
           children: [
+            MySearchBar(check: checkName),
             Expanded(
-              child: ListView.builder(
-                itemCount: widget.ingredients.length,
-                itemBuilder: (context, index) => 
-                  Row(children: 
+              child: widget.showIngredientIndex.isEmpty ? Text("No ingredient found") : ListView.builder(
+                itemCount: widget.showIngredientIndex.length,
+                itemBuilder: (context, listIndex){
+                    int index = widget.showIngredientIndex[listIndex];
+                    return Row(children: 
                     [
                       Checkbox(value: widget.isChecked[index], onChanged:(value) {
                         setState(() {
@@ -65,7 +88,9 @@ class _InputRecipeState extends State<InputRecipe> {
                         ),
                       ),
                     ]
-                  ),
+                    );
+                  }
+
                 
               ),
             ),
