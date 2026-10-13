@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/utils/IngList.dart';
 import 'package:flutter_application_1/utils/constants.dart';
-import 'package:flutter_application_1/utils/ingredient.dart';
 import 'package:flutter_application_1/utils/searchBar.dart';
 
 class InputRecipe extends StatefulWidget {
@@ -9,11 +9,11 @@ class InputRecipe extends StatefulWidget {
   final TextEditingController nameController;
   final List<TextEditingController> weightControllers;
   List<bool> isChecked;
+  List<int> showIngredientIndex = []; 
 
   final void Function(List<bool>, List<TextEditingController>) onSave;
   final VoidCallback onCancel;
 
-  List<int> showIngredientIndex = [];
 
   InputRecipe({super.key, 
   required this.ingredients, 
@@ -22,8 +22,7 @@ class InputRecipe extends StatefulWidget {
   required this.isChecked, 
   required this.onSave, 
   required this.onCancel}){
-    
-    showIngredientIndex = List.generate(ingredients.length, (i) => i);
+        showIngredientIndex = List.generate(ingredients.length, (i) => i);
   }
 
   @override
@@ -59,41 +58,12 @@ class _InputRecipeState extends State<InputRecipe> {
         child: Column(
           children: [
             MySearchBar(check: checkName),
-            Expanded(
-              child: widget.showIngredientIndex.isEmpty ? Text("No ingredient found") : ListView.builder(
-                itemCount: widget.showIngredientIndex.length,
-                itemBuilder: (context, listIndex){
-                    int index = widget.showIngredientIndex[listIndex];
-                    return Row(children: 
-                    [
-                      Checkbox(value: widget.isChecked[index], onChanged:(value) {
-                        setState(() {
-                          widget.isChecked[index] = value!;
-                        });
-                          
-                      },),
-                      Text(widget.ingredients[index][NAME]),
-                      SizedBox(width: 15,),
-                      Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: TextField(
-                            keyboardType: TextInputType.numberWithOptions(decimal: true),
-                            decoration: InputDecoration(
-                              border: OutlineInputBorder(),
-                              hintText: "Weight",
-                            ),
-                            controller: widget.weightControllers[index],
-                          ),
-                        ),
-                      ),
-                    ]
-                    );
-                  }
 
-                
-              ),
-            ),
+            IngredientList(showIngredientIndex: widget.showIngredientIndex,
+              isChecked: widget.isChecked, 
+              ingredients: widget.ingredients, 
+              weightControllers: widget.weightControllers),
+           
             TextField(
               decoration: InputDecoration(
                 border: OutlineInputBorder(), 
