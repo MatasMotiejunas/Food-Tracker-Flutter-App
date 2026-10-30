@@ -1,6 +1,9 @@
 import "package:flutter/material.dart";
 import "package:flutter_application_1/utils/constants.dart";
 
+//
+// Recipe card Design
+//
 class Recipe extends StatelessWidget {
   final List ingredients;
   final String name;
@@ -11,6 +14,7 @@ class Recipe extends StatelessWidget {
   double carbs = 0.0;
 
   Recipe({super.key, required this.name, required this.ingredients}){
+    //Calculate the details of the Recipe by going through the ingredients
     for(var ing in ingredients){
       calories += ing[CALORIES] * ing[WEIGHT] / 100;
       protein += ing[PROTEIN] * ing[WEIGHT] / 100;
@@ -25,6 +29,8 @@ class Recipe extends StatelessWidget {
   }
 
 
+  //Build a list with only the names, calories and weight of the Ingredients
+  //Firs element is the name and calories of the Recipe
   List<Text> ingredientNames(){
     List<Text> names = [Text("$name: Cal = $calories")];
     for(var ing in ingredients) {

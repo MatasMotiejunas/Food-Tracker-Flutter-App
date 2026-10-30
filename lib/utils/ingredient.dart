@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 
+//
+// Ingredient card design
+// 
 class Ingredient extends StatelessWidget {
   const Ingredient({super.key, required this.name, required this.caloriesPer100g, required this.proteinPer100g,
     required this.fatPer100g, required this.carbsPer100g});

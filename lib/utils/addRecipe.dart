@@ -3,12 +3,17 @@ import 'package:flutter_application_1/utils/IngList.dart';
 import 'package:flutter_application_1/utils/constants.dart';
 import 'package:flutter_application_1/utils/searchBar.dart';
 
+
+//
+// Dialog for creating a Recipe
+//
 class InputRecipe extends StatefulWidget {
 
   final List ingredients;
   final TextEditingController nameController;
   final List<TextEditingController> weightControllers;
   List<bool> isChecked;
+  //List of indexes of those ingredients, that have to be shown under the SearchBar
   List<int> showIngredientIndex = []; 
 
   final void Function(List<bool>, List<TextEditingController>) onSave;
@@ -31,11 +36,14 @@ class InputRecipe extends StatefulWidget {
 
 class _InputRecipeState extends State<InputRecipe> {
 
+  //Updates the shown list when interacting with the SearchBar
   void checkName(String search){
     setState(() {
       if (search.isEmpty) {
+        //show all
         widget.showIngredientIndex = List.generate(widget.ingredients.length, (i) => i);
       }else{
+        //show the ones that contain the input string 'search'
         widget.showIngredientIndex = [
           for(int i=0; i<widget.ingredients.length; i++)
             if(widget.ingredients[i][NAME].toLowerCase().contains(search.toLowerCase()))
@@ -59,6 +67,7 @@ class _InputRecipeState extends State<InputRecipe> {
           children: [
             MySearchBar(check: checkName),
 
+            //Creates the List with Checkbox, Ingredient and Weight Input
             IngredientList(showIngredientIndex: widget.showIngredientIndex,
               isChecked: widget.isChecked, 
               ingredients: widget.ingredients, 
@@ -74,6 +83,8 @@ class _InputRecipeState extends State<InputRecipe> {
 
             SizedBox(height: 10),
 
+
+            //Save and Cancel Buttons
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [

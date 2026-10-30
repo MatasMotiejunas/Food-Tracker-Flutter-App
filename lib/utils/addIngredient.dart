@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 
+//
+// Shows a Dialog for creating a new Ingredient
+//
 class InputIngredient extends StatelessWidget {
   
   final TextEditingController nameController;
@@ -80,6 +83,8 @@ class InputIngredient extends StatelessWidget {
               controller: carbsController,
             ),
 
+
+            //Save and Cancel Buttons
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [

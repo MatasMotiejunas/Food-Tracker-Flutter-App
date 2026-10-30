@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 
+//
+// Simple SearchBar
+//
 class MySearchBar extends StatelessWidget {
 
   final void Function(String) check;
@@ -13,6 +16,7 @@ class MySearchBar extends StatelessWidget {
       child: SearchBar(
         leading: Icon(Icons.search),
         hintText: "Search ingredient",
+        // Called every time a new charcater is written/deleted
         onChanged: (value) => check(value),
       ));
   }

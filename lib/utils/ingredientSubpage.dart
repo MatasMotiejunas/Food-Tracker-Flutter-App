@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/utils/constants.dart';
 import 'package:flutter_application_1/utils/ingredient.dart';
 
+//
+// Builds the Ingredients
+//
 class IngredientSubpage extends StatelessWidget {
   final List list;
 

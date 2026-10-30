@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/utils/recipe.dart';
 
+//
+// Builds the Recipes
+//
 class RecipeSubpage extends StatelessWidget {
   final List recipeList;
-
 
   const RecipeSubpage({super.key, required this.recipeList});
 

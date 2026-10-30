@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/utils/constants.dart';
 
+
+//
+// Creates a List of Checkboxes, Ingredients and Weight Input fields
+//
 class IngredientList extends StatefulWidget {
 
   final List ingredients;

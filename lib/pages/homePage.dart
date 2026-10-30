@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/data/database.dart';
 import 'package:flutter_application_1/utils/addToDay.dart';
-import 'package:flutter_application_1/utils/constants.dart';
 import 'package:flutter_application_1/utils/day.dart';
+import 'package:flutter_application_1/utils/functions.dart';
 
+//
+// Shows todays details (eaten things, progress bar)
+// Eaten Ingredients and Recipes can be added
+//
 class HomePage extends StatefulWidget {
   
   Database db;
@@ -16,15 +20,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
 
-  List<TextEditingController> generateControllers(){
-    List<TextEditingController> list = [];
-    for(var _ in widget.db.ingredientList){
-      list.add(TextEditingController());
-    }
-    return list;
-  }
-
-  Day today = Day(date :DateTime.now());
+  Day today = Day(date: DateTime.now());
 
   @override
   Widget build(BuildContext context) {
@@ -35,6 +31,8 @@ class _HomePageState extends State<HomePage> {
         title: Text("Home Page"),
       ),
       body: today,
+
+      //Add eaten Ingredient
       floatingActionButton: FloatingActionButton(onPressed: (){
         showDialog(
           context: context,
@@ -45,7 +43,7 @@ class _HomePageState extends State<HomePage> {
             }
             return AddToDay(
               ingredients: widget.db.ingredientList, 
-              weightControllers: generateControllers(), 
+              weightControllers: generateControllers(widget.db.ingredientList.length), 
               isChecked: isChecked);
           }
         );

@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 
+//
+// Button for choosing something
+// If it is the selected Button, it appears darker
+//
 class SelectButton extends StatelessWidget {
 
   final String text;

@@ -2,15 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/data/database.dart';
 import 'package:flutter_application_1/utils/addIngredient.dart';
 import 'package:flutter_application_1/utils/addRecipe.dart';
-import 'package:flutter_application_1/utils/constants.dart';
+import 'package:flutter_application_1/utils/functions.dart';
 import 'package:flutter_application_1/utils/ingredientSubpage.dart';
-import 'package:flutter_application_1/utils/ingredient.dart';
 import 'package:flutter_application_1/utils/recipeSubpage.dart';
 import 'package:flutter_application_1/utils/selectedButton.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 
-
+//
+// Shows the Ingredients or Recipes in the Database
+// Also new Ingredients or Recipes can be created
+//
 class FoodPage extends StatefulWidget {
   Database db;
 
@@ -34,8 +36,9 @@ class _FoodPageState extends State<FoodPage> {
   final TextEditingController carbsController = TextEditingController();
   final TextEditingController recipeNameController = TextEditingController();
 
-
+  //For switching between Ingretiens and Recipes being shown
   String selected = "Ingredients";
+
 
   void clearIngredientControllers(){
     nameController.clear();
@@ -44,6 +47,7 @@ class _FoodPageState extends State<FoodPage> {
     fatController.clear();
     carbsController.clear();
   }
+
 
   void saveNewIngredient(){
     setState(() {
@@ -66,21 +70,17 @@ class _FoodPageState extends State<FoodPage> {
     widget.db.updateDatabase();
   }
 
-  List<TextEditingController> generateControllers(){
-    List<TextEditingController> list = [];
-    for(var _ in widget.db.ingredientList){
-      list.add(TextEditingController());
-    }
-    return list;
-  }
 
   void saveNewRecipe(List<bool> chosenIngredients, List<TextEditingController> weightControllers){
+    //If no ingredients were chosen. Stays in the Dialog window
     bool allFalse = !chosenIngredients.contains(true);
-    if (allFalse) return;
+    if (allFalse) return; 
+
 
     setState((){
       List toAdd = [];
 
+      //Goes through the whole list and adds only those ingredients, that were checked
       for(int i=0; i<chosenIngredients.length; i++){
         if(chosenIngredients[i]){
           var ingredientWithWeight = [];
@@ -98,7 +98,6 @@ class _FoodPageState extends State<FoodPage> {
       
       widget.db.recipeList.add([recipeNameController.text.trim(), toAdd]);
       
-
       recipeNameController.clear();
       
     });
@@ -138,20 +137,27 @@ class _FoodPageState extends State<FoodPage> {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              //Change between Ingredient or Recipe List
               SelectButton(text: "Ingredients", selectedText: selected, changeSelected: handleSelection,),
               SizedBox(width: 15,),
               SelectButton(text: "Recipes", selectedText: selected, changeSelected: handleSelection,),
             ],
           ),
           
-          selected == "Ingredients" ? IngredientSubpage(list: widget.db.ingredientList) : RecipeSubpage(recipeList: widget.db.recipeList,)
+          //Show the chosen List
+          selected == "Ingredients" ? 
+            IngredientSubpage(list: widget.db.ingredientList) : 
+            RecipeSubpage(recipeList: widget.db.recipeList,)
         ],
       ),
+
+      //Add new ingredient or Recipe
       floatingActionButton: selected == "Ingredients" ? FloatingActionButton(
+              //Ingredient
               onPressed: () {showDialog(
                 context: context,
                 builder: (context){
-                  //show InputIngredient from utils/addIngredient.dart
+                  //Dialog to add an Ingredient
                   return InputIngredient(
                     nameController: nameController,
                     caloriesController: caloriesController,
@@ -165,17 +171,20 @@ class _FoodPageState extends State<FoodPage> {
               );}, 
               child: Icon(Icons.add),
             ) : FloatingActionButton(onPressed: () => {showDialog(
+              //Recipe
               context: context,
               builder: (context){
+                //List for the Checkboxes
                 List<bool> isChecked = [];
                 for(var _ in widget.db.ingredientList){
                   isChecked.add(false);
                 }
+                //Dialog to add a Recipe
                 return InputRecipe(
                   ingredients: widget.db.ingredientList, 
                   isChecked: isChecked, 
                   nameController: recipeNameController, 
-                  weightControllers: generateControllers(),
+                  weightControllers: generateControllers(widget.db.ingredientList.length),
                   onSave: saveNewRecipe,
                   onCancel: (){
                     recipeNameController.clear(); 

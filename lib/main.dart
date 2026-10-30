@@ -26,6 +26,7 @@ class _MyAppState extends State<MyApp> {
   Database db = Database();
   int currentPageIndex = 0;
 
+  //Initialising the Database if it`s the first time opening the app
   @override
   void initState() {
 
@@ -38,13 +39,16 @@ class _MyAppState extends State<MyApp> {
     super.initState();
   }
 
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(colorScheme: ColorScheme.fromSeed(seedColor: Colors.tealAccent,)),
       home: Scaffold(
+        //Load one of the Pages
         body: [HomePage(db: db), FoodPage(db: db),][currentPageIndex],
+        
         bottomNavigationBar: NavigationBar(
           destinations: [
             NavigationDestination(icon: Icon(Icons.home), label: 'Home'),
