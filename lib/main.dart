@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/data/database.dart';
 import 'package:flutter_application_1/pages/foodPage.dart';
 import 'package:flutter_application_1/pages/homePage.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -20,8 +21,22 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+
+  final myBox = Hive.box('myBox');
+  Database db = Database();
   int currentPageIndex = 0;
 
+  @override
+  void initState() {
+
+    if(myBox.get("INGREDIENTLIST") == null){
+      db.createInitialdata();
+    }else{
+      db.loadData();
+    }
+
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +44,7 @@ class _MyAppState extends State<MyApp> {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(colorScheme: ColorScheme.fromSeed(seedColor: Colors.tealAccent,)),
       home: Scaffold(
-        body: [HomePage(), FoodPage(),][currentPageIndex],
+        body: [HomePage(db: db), FoodPage(db: db),][currentPageIndex],
         bottomNavigationBar: NavigationBar(
           destinations: [
             NavigationDestination(icon: Icon(Icons.home), label: 'Home'),

@@ -12,7 +12,9 @@ import 'package:hive_flutter/hive_flutter.dart';
 
 
 class FoodPage extends StatefulWidget {
-  FoodPage({super.key});
+  Database db;
+
+  FoodPage({super.key, required this.db});
 
   @override
   State<FoodPage> createState() => _FoodPageState();
@@ -21,19 +23,8 @@ class FoodPage extends StatefulWidget {
 class _FoodPageState extends State<FoodPage> {
 
   final myBox = Hive.box('myBox');
-  Database db = Database();
 
-  @override
-  void initState() {
 
-    if(myBox.get("INGREDIENTLIST") == null){
-      db.createInitialdata();
-    }else{
-      db.loadData();
-    }
-
-    super.initState();
-  }
 
   //Controllers for each of the input fields when adding an ingredient
   final TextEditingController nameController = TextEditingController();
@@ -63,7 +54,7 @@ class _FoodPageState extends State<FoodPage> {
       String carbs = carbsController.text;
       
 
-      db.ingredientList.add([name.trim(), 
+      widget.db.ingredientList.add([name.trim(), 
       double.tryParse(calories)?? 0.0, 
       double.tryParse(protein)?? 0.0, 
       double.tryParse(fat)?? 0.0, 
@@ -72,12 +63,12 @@ class _FoodPageState extends State<FoodPage> {
       clearIngredientControllers();
     });
     Navigator.of(context).pop();
-    db.updateDatabase();
+    widget.db.updateDatabase();
   }
 
   List<TextEditingController> generateControllers(){
     List<TextEditingController> list = [];
-    for(var _ in db.ingredientList){
+    for(var _ in widget.db.ingredientList){
       list.add(TextEditingController());
     }
     return list;
@@ -93,7 +84,7 @@ class _FoodPageState extends State<FoodPage> {
       for(int i=0; i<chosenIngredients.length; i++){
         if(chosenIngredients[i]){
           var ingredientWithWeight = [];
-          for(var data in db.ingredientList[i]){
+          for(var data in widget.db.ingredientList[i]){
             ingredientWithWeight.add(data);
           }
 
@@ -105,7 +96,7 @@ class _FoodPageState extends State<FoodPage> {
         }
       }
       
-      db.recipeList.add([recipeNameController.text.trim(), toAdd]);
+      widget.db.recipeList.add([recipeNameController.text.trim(), toAdd]);
       
 
       recipeNameController.clear();
@@ -113,7 +104,7 @@ class _FoodPageState extends State<FoodPage> {
     });
 
     Navigator.of(context).pop();
-    db.updateDatabase();
+    widget.db.updateDatabase();
   }
 
   void onCancel () {
@@ -153,7 +144,7 @@ class _FoodPageState extends State<FoodPage> {
             ],
           ),
           
-          selected == "Ingredients" ? IngredientSubpage(list: db.ingredientList) : RecipeSubpage(recipeList: db.recipeList,)
+          selected == "Ingredients" ? IngredientSubpage(list: widget.db.ingredientList) : RecipeSubpage(recipeList: widget.db.recipeList,)
         ],
       ),
       floatingActionButton: selected == "Ingredients" ? FloatingActionButton(
@@ -177,11 +168,11 @@ class _FoodPageState extends State<FoodPage> {
               context: context,
               builder: (context){
                 List<bool> isChecked = [];
-                for(var _ in db.ingredientList){
+                for(var _ in widget.db.ingredientList){
                   isChecked.add(false);
                 }
                 return InputRecipe(
-                  ingredients: db.ingredientList, 
+                  ingredients: widget.db.ingredientList, 
                   isChecked: isChecked, 
                   nameController: recipeNameController, 
                   weightControllers: generateControllers(),
