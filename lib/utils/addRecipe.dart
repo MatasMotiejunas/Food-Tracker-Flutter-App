@@ -12,11 +12,11 @@ class InputRecipe extends StatefulWidget {
   final List ingredients;
   final TextEditingController nameController;
   final List<TextEditingController> weightControllers;
-  List<bool> isChecked;
+  List<int> isChecked;
   //List of indexes of those ingredients, that have to be shown under the SearchBar
   List<int> showIngredientIndex = []; 
 
-  final void Function(List<bool>, List<TextEditingController>) onSave;
+  final void Function(List<int>, List<TextEditingController>) onSave;
   final VoidCallback onCancel;
 
 

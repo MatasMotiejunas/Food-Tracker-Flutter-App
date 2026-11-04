@@ -11,7 +11,7 @@ class IngredientList extends StatefulWidget {
   final List<TextEditingController> weightControllers; 
 
   List<int> showIngredientIndex; 
-  List<bool> isChecked;
+  List<int> isChecked;
 
   
   IngredientList({super.key, 
@@ -32,11 +32,17 @@ class _IngredientListState extends State<IngredientList> {
         itemCount: widget.showIngredientIndex.length,
         itemBuilder: (context, listIndex){
             int index = widget.showIngredientIndex[listIndex];
+            bool contains = widget.isChecked.contains(index);
             return Row(children: 
             [
-              Checkbox(value: widget.isChecked[index], onChanged:(value) {
+              Checkbox(value: contains, onChanged:(value) {
                 setState(() {
-                  widget.isChecked[index] = value!;
+                  if(contains){
+                    widget.isChecked.remove(index);
+                  }else{
+                    widget.isChecked.add(index);
+                  }
+                  
                 });
                   
               },),

@@ -71,29 +71,28 @@ class _FoodPageState extends State<FoodPage> {
   }
 
 
-  void saveNewRecipe(List<bool> chosenIngredients, List<TextEditingController> weightControllers){
+  void saveNewRecipe(List<int> chosenIngredients, List<TextEditingController> weightControllers){
     //If no ingredients were chosen. Stays in the Dialog window
-    bool allFalse = !chosenIngredients.contains(true);
-    if (allFalse) return; 
+    if (chosenIngredients.isEmpty) return; 
 
 
     setState((){
       List toAdd = [];
 
       //Goes through the whole list and adds only those ingredients, that were checked
-      for(int i=0; i<chosenIngredients.length; i++){
-        if(chosenIngredients[i]){
-          var ingredientWithWeight = [];
-          for(var data in widget.db.ingredientList[i]){
-            ingredientWithWeight.add(data);
-          }
-
-          String w = weightControllers[i].text;
-
-          var weight = double.tryParse(w) ?? 0.0;
-          ingredientWithWeight.add(weight);
-          toAdd.add(ingredientWithWeight);
+      for(int i in chosenIngredients){
+        
+        var ingredientWithWeight = [];
+        for(var data in widget.db.ingredientList[i]){
+          ingredientWithWeight.add(data);
         }
+
+        String w = weightControllers[i].text;
+
+        var weight = double.tryParse(w) ?? 0.0;
+        ingredientWithWeight.add(weight);
+        toAdd.add(ingredientWithWeight);
+        
       }
       
       widget.db.recipeList.add([recipeNameController.text.trim(), toAdd]);
@@ -175,10 +174,7 @@ class _FoodPageState extends State<FoodPage> {
               context: context,
               builder: (context){
                 //List for the Checkboxes
-                List<bool> isChecked = [];
-                for(var _ in widget.db.ingredientList){
-                  isChecked.add(false);
-                }
+                List<int> isChecked = [];
                 //Dialog to add a Recipe
                 return InputRecipe(
                   ingredients: widget.db.ingredientList, 

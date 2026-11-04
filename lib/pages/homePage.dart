@@ -37,10 +37,7 @@ class _HomePageState extends State<HomePage> {
         showDialog(
           context: context,
           builder: (context) {
-            List<bool> isChecked = [];
-            for(var _ in widget.db.ingredientList){
-              isChecked.add(false);
-            }
+            List<int> isChecked = [];
             return AddToDay(
               ingredients: widget.db.ingredientList, 
               weightControllers: generateControllers(widget.db.ingredientList.length), 

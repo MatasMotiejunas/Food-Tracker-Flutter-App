@@ -7,7 +7,7 @@ class AddToDay extends StatefulWidget {
 
   final List ingredients;
   final List<TextEditingController> weightControllers;
-  List<bool> isChecked;
+  List<int> isChecked;
   List<int> showIngredientIndex = []; 
 
   AddToDay({super.key, 
