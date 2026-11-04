@@ -10,10 +10,15 @@ class AddToDay extends StatefulWidget {
   List<int> isChecked;
   List<int> showIngredientIndex = []; 
 
+  final void Function(List<int>, List<TextEditingController>) onSave;
+  final VoidCallback onCancel;
+
   AddToDay({super.key, 
   required this.ingredients,
   required this.weightControllers,
-  required this.isChecked}){
+  required this.isChecked, 
+  required this.onSave,
+  required this.onCancel}){
     showIngredientIndex = List.generate(ingredients.length, (i) => i);
   }
 
@@ -55,6 +60,26 @@ class _AddToDayState extends State<AddToDay> {
               isChecked: widget.isChecked, 
               ingredients: widget.ingredients, 
               weightControllers: widget.weightControllers),
+
+            //Save and Cancel Buttons
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                MaterialButton(
+                  color: Theme.of(context).primaryColor,
+                  onPressed: () => widget.onSave(widget.isChecked, widget.weightControllers),
+                  child: Text("Save"),
+                ),
+                
+                const SizedBox(width: 5),
+
+                MaterialButton(
+                  color: Theme.of(context).primaryColor,
+                  onPressed: widget.onCancel,
+                  child: Text("Cancel"),
+                ),
+              ],
+            ),
           ],
         ),
       ),

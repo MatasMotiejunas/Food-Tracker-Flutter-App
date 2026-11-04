@@ -4,6 +4,7 @@ class Database {
 
   List ingredientList = [];
   List recipeList = [];
+  List daysIngredients = [];
 
   final myBox = Hive.box('myBox');
 
