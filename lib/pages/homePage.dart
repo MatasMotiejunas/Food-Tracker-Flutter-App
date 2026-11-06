@@ -20,12 +20,20 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
 
-  DayData today = DayData(date: DateTime.now());
-  int counter = 0;
+
+  
+DayData today = DayData(date: DateTime.now());
+
+  @override
+  void initState() {
+
+    widget.db.days.update(today.date, (value) => [], ifAbsent: () => []);
+    widget.db.updateDayDatabase();
+    print("At initiaisation: ${widget.db.days}");
+    super.initState();
+  }
 
   void addIngredients(List<int> chosenIngredients, List<TextEditingController> weightControllers){
-    
-    print("List is: " + chosenIngredients.toString());
     //If no ingredients were chosen. Stays in the Dialog window
     if (chosenIngredients.isEmpty) return; 
 
@@ -51,15 +59,14 @@ class _HomePageState extends State<HomePage> {
       
       for(var ing in toAdd){
         today.addIngredient(ing);
-        counter++;
       }
-      
-      print(today.calories);
-      print(today.eaten);
       
     });
 
     Navigator.of(context).pop();
+    widget.db.days.update(today.date, (value) => today.eaten, ifAbsent: () => []);
+    widget.db.updateDayDatabase();
+    print("Updated value: ${widget.db.days}");
   }
 
   @override

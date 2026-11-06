@@ -4,7 +4,9 @@ class Database {
 
   List ingredientList = [];
   List recipeList = [];
-  List daysIngredients = [];
+
+  //Element: [date, [Ing/Rec (with weight), ...]]
+  Map days = <DateTime, List>{};
 
   final myBox = Hive.box('myBox');
 
@@ -25,18 +27,26 @@ class Database {
         ["Ingredient 2", 550.1, 15.0, 3.1, 27.0, 80.5],
         ["Ingredient 3", 250.9, 5.2, 2.6, 3.0, 22.5]]],
     ];
+
+    
+
   }
 
 
   void loadData(){
     ingredientList = myBox.get("INGREDIENTLIST");
     recipeList = myBox.get("RECIPELIST");
+    days = myBox.get("DAYS");
   }
 
 
   void updateDatabase(){
     myBox.put("INGREDIENTLIST", ingredientList);
     myBox.put("RECIPELIST", recipeList);
+  }
+
+  void updateDayDatabase(){
+    myBox.put("DAYS", days);
   }
 
 
