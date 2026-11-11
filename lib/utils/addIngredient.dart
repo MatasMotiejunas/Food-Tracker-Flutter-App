@@ -10,6 +10,7 @@ class InputIngredient extends StatelessWidget {
   final TextEditingController proteinController;
   final TextEditingController fatController;
   final TextEditingController carbsController; 
+  final TextEditingController fiberController; 
 
   final VoidCallback onSave;
   final VoidCallback onCancel;
@@ -21,6 +22,7 @@ class InputIngredient extends StatelessWidget {
     required this.proteinController, 
     required this.fatController, 
     required this.carbsController,
+    required this.fiberController,
     required this.onSave,
     required this.onCancel,});
 
@@ -81,6 +83,17 @@ class InputIngredient extends StatelessWidget {
                 border: OutlineInputBorder(),
               ),
               controller: carbsController,
+            ),
+
+
+            Text("Fiber per 100g:"),
+            //ingredient carbs
+            TextField(
+              keyboardType: TextInputType.numberWithOptions(decimal: true),
+              decoration: InputDecoration(
+                border: OutlineInputBorder(),
+              ),
+              controller: fiberController,
             ),
 
 

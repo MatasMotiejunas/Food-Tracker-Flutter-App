@@ -21,15 +21,26 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
 
 
-  
-DayData today = DayData(date: DateTime.now());
+  late DayData today;
 
   @override
   void initState() {
+    DateTime now = DateTime.now();
+    DateTime nowNormal = DateTime(now.year, now.month, now.day);
+    // if(widget.db.days.containsKey(nowNormal)){
+    //   today = DayData.createEaten(nowNormal, widget.db.days[nowNormal]);
+    // }else{
+    //   widget.db.days.update(nowNormal, (value) => value, ifAbsent: () => []);
+    //   widget.db.updateDayDatabase();
+    //   today = DayData.createEmpty(nowNormal);
+    // }
 
-    widget.db.days.update(today.date, (value) => [], ifAbsent: () => []);
+  print("Before initialisation: ${widget.db.days}");
+    List value = widget.db.days.putIfAbsent(nowNormal, () => []);
+    today = DayData.createEaten(nowNormal, value);
+    
     widget.db.updateDayDatabase();
-    print("At initiaisation: ${widget.db.days}");
+    print("At initialisation: ${widget.db.days}");
     super.initState();
   }
 
@@ -85,7 +96,8 @@ DayData today = DayData(date: DateTime.now());
           Text("Calories: ${today.calories}"), 
           Text("Protein :${today.protein}"),
           Text("Fat: ${today.fat}"),
-          Text("Carbs: ${today.carbs}"),],
+          Text("Carbs: ${today.carbs}"),
+          Text("Fiber: ${today.fiber}"),],
         ),
       ),
 

@@ -5,7 +5,8 @@ const int CALORIES = 1;
 const int PROTEIN = 2;
 const int FAT = 3;
 const int CARBS = 4;
-const int WEIGHT = 5;
+const int FIBER = 5;
+const int WEIGHT = 6;
 
 //used in Day, to differentiate in the list 'eaten', whether an ingredient or a recipe is commin up next
 const int INGREDIENT = 0;

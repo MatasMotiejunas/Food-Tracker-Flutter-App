@@ -12,6 +12,7 @@ class Recipe extends StatelessWidget {
   double protein = 0.0;
   double fat = 0.0;
   double carbs = 0.0;
+  double fiber = 0.0;
 
   Recipe({super.key, required this.name, required this.ingredients}){
     //Calculate the details of the Recipe by going through the ingredients
@@ -20,12 +21,14 @@ class Recipe extends StatelessWidget {
       protein += ing[PROTEIN] * ing[WEIGHT] / 100;
       fat += ing[FAT] * ing[WEIGHT] / 100;
       carbs += ing[CARBS] * ing[WEIGHT] / 100;
+      fiber += ing[FIBER] * ing[WEIGHT] / 100;
     }
 
     calories = double.parse(calories.toStringAsFixed(1));
     protein = double.parse(protein.toStringAsFixed(1));
     fat = double.parse(fat.toStringAsFixed(1));
     carbs = double.parse(carbs.toStringAsFixed(1));
+    fiber = double.parse(fiber.toStringAsFixed(1));
   }
 
 

@@ -2,19 +2,31 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/utils/constants.dart';
 
 class DayData extends StatelessWidget {
-  final DateTime date;
+  DateTime date;
   
   double calories = 0.0;
   double protein = 0.0;
   double fat = 0.0;
   double carbs = 0.0;
+  double fiber = 0.0;
 
   List eaten = [];
 
 
-  DayData({super.key,
-    required this.date,
-  });
+  DayData({super.key, required this.date, required this.eaten}){
+    date = DateTime(date.year, date.month, date.day);
+    for(var food in eaten){
+      addValues(food[1]);
+    }
+  }
+
+  factory DayData.createEaten(DateTime date, List eaten){
+    return DayData(date: date,eaten: eaten);
+  }
+
+  // factory DayData.createEmpty(DateTime date){
+  //   return DayData(date: date, eaten: []);
+  // }
 
 
 
@@ -23,11 +35,13 @@ class DayData extends StatelessWidget {
     protein += ingredient[PROTEIN] * ingredient[WEIGHT] / 100;
     fat += ingredient[FAT] * ingredient[WEIGHT] / 100;
     carbs += ingredient[CARBS] * ingredient[WEIGHT] / 100;
+    fiber += ingredient[FIBER] * ingredient[WEIGHT] / 100;
 
     calories = double.parse(calories.toStringAsFixed(1));
     protein = double.parse(protein.toStringAsFixed(1));
     fat = double.parse(fat.toStringAsFixed(1));
     carbs = double.parse(carbs.toStringAsFixed(1));
+    fiber = double.parse(fiber.toStringAsFixed(1));
   }
 
   void addIngredient(List ingredient){

@@ -21,7 +21,8 @@ class IngredientSubpage extends StatelessWidget {
                 caloriesPer100g: list[index][CALORIES], 
                 proteinPer100g: list[index][PROTEIN], 
                 fatPer100g: list[index][FAT], 
-                carbsPer100g: list[index][CARBS]);
+                carbsPer100g: list[index][CARBS],
+                fiberPer100g: list[index][FIBER],);
             },
             
           )

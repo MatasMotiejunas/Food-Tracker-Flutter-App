@@ -32,6 +32,7 @@ class _MyAppState extends State<MyApp> {
 
     if(myBox.get("INGREDIENTLIST") == null){
       db.createInitialdata();
+      db.updateDatabase();
     }else{
       db.loadData();
     }

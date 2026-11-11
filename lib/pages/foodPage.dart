@@ -34,6 +34,7 @@ class _FoodPageState extends State<FoodPage> {
   final TextEditingController proteinController = TextEditingController();
   final TextEditingController fatController = TextEditingController();
   final TextEditingController carbsController = TextEditingController();
+  final TextEditingController fiberController = TextEditingController();
   final TextEditingController recipeNameController = TextEditingController();
 
   //For switching between Ingretiens and Recipes being shown
@@ -46,6 +47,7 @@ class _FoodPageState extends State<FoodPage> {
     proteinController.clear();
     fatController.clear();
     carbsController.clear();
+    fiberController.clear();
   }
 
 
@@ -56,13 +58,15 @@ class _FoodPageState extends State<FoodPage> {
       String protein = proteinController.text;
       String fat = fatController.text;
       String carbs = carbsController.text;
+      String fiber = fiberController.text;
       
 
       widget.db.ingredientList.add([name.trim(), 
       double.tryParse(calories)?? 0.0, 
       double.tryParse(protein)?? 0.0, 
       double.tryParse(fat)?? 0.0, 
-      double.tryParse(carbs)?? 0.0]);
+      double.tryParse(carbs)?? 0.0,
+      double.tryParse(fiber)?? 0.0]);
 
       clearIngredientControllers();
     });
@@ -163,6 +167,7 @@ class _FoodPageState extends State<FoodPage> {
                     proteinController: proteinController,
                     fatController: fatController,
                     carbsController: carbsController,
+                    fiberController: fiberController,
                     onSave: saveNewIngredient,
                     onCancel: onCancel,
                   );
