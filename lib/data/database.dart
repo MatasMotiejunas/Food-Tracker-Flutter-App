@@ -8,6 +8,12 @@ class Database {
   //Element: [date, [Ing/Rec (with weight), ...]]
   Map days = <DateTime, List>{};
 
+  int caloriesGoal = 2500;
+  int proteinGoal = 70;
+  int fatGoal = 100;
+  int carbsGoal = 300;
+  int fiberGoal = 30;
+
   final myBox = Hive.box('myBox');
 
 
@@ -28,7 +34,6 @@ class Database {
         ["Ingredient 3", 250.9, 5.2, 2.6, 3.0, 0.3, 22.5]]],
     ];
 
-
   }
 
 
@@ -36,18 +41,29 @@ class Database {
     ingredientList = myBox.get("INGREDIENTLIST");
     recipeList = myBox.get("RECIPELIST");
     days = myBox.get("DAYS");
-    print("Loaded days: $days");
+    caloriesGoal = myBox.get("CALORIES");
+    proteinGoal = myBox.get("PROTEIN");
+    fatGoal = myBox.get("FAT");
+    carbsGoal = myBox.get("CARBS");
+    fiberGoal = myBox.get("FIBER");
   }
 
 
-  void updateDatabase(){
+  void updateFoodDatabase(){
     myBox.put("INGREDIENTLIST", ingredientList);
     myBox.put("RECIPELIST", recipeList);
   }
 
   void updateDayDatabase(){
     myBox.put("DAYS", days);
-    print("Updated hive: ${myBox.get("DAYS")}");
+  }
+
+  void updateGoalDatabase(){
+    myBox.put("CALORIES", caloriesGoal);
+    myBox.put("PROTEIN", proteinGoal);
+    myBox.put("FAT", fatGoal);
+    myBox.put("CARBS", carbsGoal);
+    myBox.put("FIBER", fiberGoal);
   }
 
 

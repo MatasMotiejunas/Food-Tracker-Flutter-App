@@ -71,7 +71,7 @@ class _FoodPageState extends State<FoodPage> {
       clearIngredientControllers();
     });
     Navigator.of(context).pop();
-    widget.db.updateDatabase();
+    widget.db.updateFoodDatabase();
   }
 
 
@@ -106,7 +106,7 @@ class _FoodPageState extends State<FoodPage> {
     });
 
     Navigator.of(context).pop();
-    widget.db.updateDatabase();
+    widget.db.updateFoodDatabase();
   }
 
   void onCancel () {
