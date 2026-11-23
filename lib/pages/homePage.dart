@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/data/database.dart';
 import 'package:flutter_application_1/utils/addToDay.dart';
+import 'package:flutter_application_1/utils/constants.dart';
 import 'package:flutter_application_1/utils/dayData.dart';
 import 'package:flutter_application_1/utils/functions.dart';
+import 'package:flutter_application_1/utils/showEaten.dart';
 import 'package:flutter_application_1/utils/updateDailyGoals.dart';
+import 'package:collection/collection.dart';
 
 //
 // Shows todays details (eaten things, progress bar)
@@ -50,6 +53,7 @@ class _HomePageState extends State<HomePage> {
     //If no ingredients were chosen. Stays in the Dialog window
     if (chosenIngredients.isEmpty) return; 
 
+    bool zeroWeight = false;
 
     setState((){
       List toAdd = [];
@@ -63,8 +67,14 @@ class _HomePageState extends State<HomePage> {
         }
 
         String w = weightControllers[i].text;
+        
 
         var weight = double.tryParse(w) ?? 0.0;
+        if(weight == 0.0) {
+          zeroWeight = true;
+          return;
+        }
+
         ingredientWithWeight.add(weight);
         toAdd.add(ingredientWithWeight);
         
@@ -76,6 +86,7 @@ class _HomePageState extends State<HomePage> {
       
     });
 
+    if(zeroWeight) return;
     Navigator.of(context).pop();
     widget.db.days.update(today.date, (value) => today.eaten, ifAbsent: () => []);
     widget.db.updateDayDatabase();
@@ -127,6 +138,37 @@ class _HomePageState extends State<HomePage> {
   }
 
 
+
+  void removeIngredient(String name, double weight){
+    print("removeIngredient Called");
+    print("Params: $name $weight");
+    List toRemove = [0, []];
+    setState(() {
+      List eaten = widget.db.days[today.date];
+      for(var food in eaten){
+        if(food[0] == 0){
+          if(food[1][NAME] == name && food[1][WEIGHT] == weight){
+            toRemove[1].insertAll(0, food[1]);
+            print("The created toRemove: $toRemove");
+            break;
+          }
+        }
+      }
+
+      const eq = DeepCollectionEquality();
+      final i = widget.db.days[today.date].indexWhere((e) => eq.equals(e, toRemove));
+      if (i != -1) widget.db.days[today.date].removeAt(i);
+      widget.db.updateDayDatabase();
+      // today.eaten = widget.db.days[today.date];
+      DateTime now = DateTime.now();
+      DateTime nowNormal = DateTime(now.year, now.month, now.day);
+      today = DayData.createEaten(nowNormal, widget.db.days[nowNormal]);
+      
+      print("db.days[today.date] after: ${widget.db.days[today.date]}");
+    });
+    
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -140,6 +182,8 @@ class _HomePageState extends State<HomePage> {
           mainAxisAlignment: MainAxisAlignment.center, 
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
+            SizedBox(height: 50),
+
             Text("Calories ${today.calories} / ${widget.db.caloriesGoal}"),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 16.0),
@@ -184,6 +228,9 @@ class _HomePageState extends State<HomePage> {
               
               color: Colors.lightGreen,
               child: Text("Change Goals"),),
+
+
+              ShowEaten(list: today.eaten, removeIngredient: removeIngredient,),
               
           ],
         ),

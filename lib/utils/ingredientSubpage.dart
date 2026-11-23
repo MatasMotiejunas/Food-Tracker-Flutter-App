@@ -22,7 +22,9 @@ class IngredientSubpage extends StatelessWidget {
                 proteinPer100g: list[index][PROTEIN], 
                 fatPer100g: list[index][FAT], 
                 carbsPer100g: list[index][CARBS],
-                fiberPer100g: list[index][FIBER],);
+                fiberPer100g: list[index][FIBER],
+                weight: 0.0,
+                removeIngredient: (String name, double weight){},);
             },
             
           )
