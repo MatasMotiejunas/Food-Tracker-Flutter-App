@@ -7,6 +7,7 @@ import "package:flutter_application_1/utils/constants.dart";
 class Recipe extends StatelessWidget {
   final List ingredients;
   final String name;
+  final Function(String) removeRecipe;
 
   double calories = 0.0;
   double protein = 0.0;
@@ -14,7 +15,7 @@ class Recipe extends StatelessWidget {
   double carbs = 0.0;
   double fiber = 0.0;
 
-  Recipe({super.key, required this.name, required this.ingredients}){
+  Recipe({super.key, required this.name, required this.ingredients, required this.removeRecipe}){
     //Calculate the details of the Recipe by going through the ingredients
     for(var ing in ingredients){
       calories += ing[CALORIES] * ing[WEIGHT] / 100;
@@ -56,9 +57,21 @@ class Recipe extends StatelessWidget {
           color: Colors.green,
           borderRadius: BorderRadius.circular(12),
         ),
-        child: Column(
-          children: ingredientNames(),
-        ),
+        child: Row(children: [
+            Column(
+              children: ingredientNames(),
+            ),
+
+            GestureDetector(
+              onTap: () => removeRecipe(name),
+              child: Container(
+                padding: EdgeInsets.all(5),
+                color:  Colors.red[300],
+                child: Text("X"),
+              ),
+            ),
+          ]
+        )
       ),
     );
   }

@@ -6,7 +6,6 @@ import 'package:flutter_application_1/utils/dayData.dart';
 import 'package:flutter_application_1/utils/functions.dart';
 import 'package:flutter_application_1/utils/showEaten.dart';
 import 'package:flutter_application_1/utils/updateDailyGoals.dart';
-import 'package:collection/collection.dart';
 
 //
 // Shows todays details (eaten things, progress bar)
@@ -39,26 +38,24 @@ class _HomePageState extends State<HomePage> {
     DateTime now = DateTime.now();
     DateTime nowNormal = DateTime(now.year, now.month, now.day);
 
-
-  print("Before initialisation: ${widget.db.days}");
     List value = widget.db.days.putIfAbsent(nowNormal, () => []);
     today = DayData.createEaten(nowNormal, value);
     
     widget.db.updateDayDatabase();
-    print("At initialisation: ${widget.db.days}");
     super.initState();
   }
 
-  void addIngredients(List<int> chosenIngredients, List<TextEditingController> weightControllers){
+  void addIngredientsAndRecipes(List<int> chosenIngredients, List<TextEditingController> weightControllers, List<int> chosenRecipes){
     //If no ingredients were chosen. Stays in the Dialog window
-    if (chosenIngredients.isEmpty) return; 
+    if (chosenIngredients.isEmpty && chosenRecipes.isEmpty) return; 
 
     bool zeroWeight = false;
 
     setState((){
-      List toAdd = [];
+      List toAddIng = [];
+      List toAddRec = [];
 
-      //ChosenIngredients containc indeces of ingredients
+      //ChosenIngredients contains indeces of ingredients
       for(int i in chosenIngredients){
         
         var ingredientWithWeight = [];
@@ -76,12 +73,18 @@ class _HomePageState extends State<HomePage> {
         }
 
         ingredientWithWeight.add(weight);
-        toAdd.add(ingredientWithWeight);
+        toAddIng.add(ingredientWithWeight);
         
       }
       
-      for(var ing in toAdd){
+      for(var ing in toAddIng){
         today.addIngredient(ing);
+      }
+
+
+      //Add Recipes
+      for(int i in chosenRecipes){
+        today.addRecipe(widget.db.recipeList[i]);
       }
       
     });
@@ -90,7 +93,6 @@ class _HomePageState extends State<HomePage> {
     Navigator.of(context).pop();
     widget.db.days.update(today.date, (value) => today.eaten, ifAbsent: () => []);
     widget.db.updateDayDatabase();
-    print("Updated value: ${widget.db.days}");
   }
 
 
@@ -140,33 +142,42 @@ class _HomePageState extends State<HomePage> {
 
 
   void removeIngredient(String name, double weight){
-    print("removeIngredient Called");
-    print("Params: $name $weight");
-    List toRemove = [0, []];
     setState(() {
       List eaten = widget.db.days[today.date];
-      for(var food in eaten){
-        if(food[0] == 0){
-          if(food[1][NAME] == name && food[1][WEIGHT] == weight){
-            toRemove[1].insertAll(0, food[1]);
-            print("The created toRemove: $toRemove");
-            break;
-          }
-        }
+
+      for(int i=0; i<eaten.length; i++){
+        if(eaten[i][0] == INGREDIENT && eaten[i][1][NAME] == name && eaten[i][1][WEIGHT] == weight){
+          eaten.removeAt(i);
+          break;
+        } 
       }
 
-      const eq = DeepCollectionEquality();
-      final i = widget.db.days[today.date].indexWhere((e) => eq.equals(e, toRemove));
-      if (i != -1) widget.db.days[today.date].removeAt(i);
       widget.db.updateDayDatabase();
-      // today.eaten = widget.db.days[today.date];
       DateTime now = DateTime.now();
       DateTime nowNormal = DateTime(now.year, now.month, now.day);
       today = DayData.createEaten(nowNormal, widget.db.days[nowNormal]);
-      
-      print("db.days[today.date] after: ${widget.db.days[today.date]}");
+  
     });
     
+  }
+
+
+  void removeRecipe(String name){
+    setState(() {
+      List eaten = widget.db.days[today.date];
+
+      for(int i=0; i<eaten.length; i++){
+        if(eaten[i][0] == RECIPE && eaten[i][1][0] == name){
+          eaten.removeAt(i);
+          break;
+        }
+      }
+    });
+
+    widget.db.updateDayDatabase();
+    DateTime now = DateTime.now();
+    DateTime nowNormal = DateTime(now.year, now.month, now.day);
+    today = DayData.createEaten(nowNormal, widget.db.days[nowNormal]);
   }
 
   @override
@@ -230,7 +241,7 @@ class _HomePageState extends State<HomePage> {
               child: Text("Change Goals"),),
 
 
-              ShowEaten(list: today.eaten, removeIngredient: removeIngredient,),
+              ShowEaten(list: today.eaten, removeIngredient: removeIngredient, removeRecipe: removeRecipe,),
               
           ],
         ),
@@ -243,12 +254,11 @@ class _HomePageState extends State<HomePage> {
         showDialog(
           context: context,
           builder: (context) {
-            List<int> isChecked = [];
             return AddToDay(
               ingredients: widget.db.ingredientList, 
-              weightControllers: generateControllers(widget.db.ingredientList.length), 
-              isChecked: isChecked, 
-              onSave: addIngredients,
+              recipes: widget.db.recipeList,
+              weightControllers: generateControllers(widget.db.ingredientList.length),  
+              onSave: addIngredientsAndRecipes,
               onCancel: (){
                 Navigator.of(context).pop();
               });

@@ -29,8 +29,7 @@ class Ingredient extends StatelessWidget {
           color: Colors.green,
           borderRadius: BorderRadius.circular(12),
         ),
-        child: weight == 0.0 ? Text("$name \n Calories: $caloriesPer100g \n Protein: $proteinPer100g \n Fat: $fatPer100g \n Carbs: $carbsPer100g \n Fiber: $fiberPer100g") :
-          Row(children:[
+        child: Row(children:[
             Text("$name \n Calories: $caloriesPer100g \n Protein: $proteinPer100g \n Fat: $fatPer100g \n Carbs: $carbsPer100g \n Fiber: $fiberPer100g\n Weight: $weight"),
             GestureDetector(
               onTap: () => removeIngredient(name, weight),

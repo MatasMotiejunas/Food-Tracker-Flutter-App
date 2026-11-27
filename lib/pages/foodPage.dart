@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/data/database.dart';
 import 'package:flutter_application_1/utils/addIngredient.dart';
 import 'package:flutter_application_1/utils/addRecipe.dart';
+import 'package:flutter_application_1/utils/constants.dart';
 import 'package:flutter_application_1/utils/functions.dart';
 import 'package:flutter_application_1/utils/ingredientSubpage.dart';
 import 'package:flutter_application_1/utils/recipeSubpage.dart';
@@ -120,6 +121,38 @@ class _FoodPageState extends State<FoodPage> {
     });
   }
 
+
+  void removeIngredient(String name, double weight){
+    setState(() {
+      List ingredients = widget.db.ingredientList;
+
+      for(var ing in ingredients){
+        if(ing[NAME] == name){
+          ingredients.remove(ing);
+          break;
+        }
+      }
+    });
+    
+    widget.db.updateFoodDatabase();
+  }
+  
+
+  void removeRecipe(String name){
+    setState(() {
+      List recipes = widget.db.recipeList;
+
+      for(var rec in recipes){
+        if(rec[0] == name){
+          recipes.remove(rec);
+          break;
+        }
+      }
+    });
+
+    widget.db.updateFoodDatabase();
+  }
+
   void resetHive(){
     setState(() {
       myBox.clear();
@@ -149,8 +182,8 @@ class _FoodPageState extends State<FoodPage> {
           
           //Show the chosen List
           selected == "Ingredients" ? 
-            IngredientSubpage(list: widget.db.ingredientList) : 
-            RecipeSubpage(recipeList: widget.db.recipeList,)
+            IngredientSubpage(list: widget.db.ingredientList, removeIngredient: removeIngredient,) : 
+            RecipeSubpage(recipeList: widget.db.recipeList, removeRecipe: removeRecipe)
         ],
       ),
 

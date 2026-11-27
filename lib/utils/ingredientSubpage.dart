@@ -7,8 +7,9 @@ import 'package:flutter_application_1/utils/ingredient.dart';
 //
 class IngredientSubpage extends StatelessWidget {
   final List list;
+  final Function(String, double) removeIngredient;
 
-  const IngredientSubpage({super.key, required this.list});
+  const IngredientSubpage({super.key, required this.list, required this.removeIngredient});
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +25,7 @@ class IngredientSubpage extends StatelessWidget {
                 carbsPer100g: list[index][CARBS],
                 fiberPer100g: list[index][FIBER],
                 weight: 0.0,
-                removeIngredient: (String name, double weight){},);
+                removeIngredient: removeIngredient,);
             },
             
           )

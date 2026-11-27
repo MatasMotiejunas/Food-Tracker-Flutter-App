@@ -15,8 +15,14 @@ class DayData extends StatelessWidget {
 
   DayData({super.key, required this.date, required this.eaten}){
     date = DateTime(date.year, date.month, date.day);
+    print("Eaten: $eaten");
     for(var food in eaten){
-      addValues(food[1]);
+      if(food[0] == INGREDIENT){
+        addValues(food[1]);
+      }else{
+        addValuesRecipe(food[1]);
+      }
+      
     }
   }
 
@@ -50,6 +56,14 @@ class DayData extends StatelessWidget {
   
   }
 
+  void addValuesRecipe(List recipe){
+    List ingredients = recipe[1];
+
+    for(var ing in ingredients){
+      addValues(ing);
+    }
+  }
+
   void addRecipe(List recipe){
     List ingredients = recipe[1];
 
@@ -58,7 +72,6 @@ class DayData extends StatelessWidget {
     }
 
     eaten.add([RECIPE, recipe]);      
-
   }
 
   @override

@@ -6,8 +6,9 @@ import 'package:flutter_application_1/utils/recipe.dart';
 //
 class RecipeSubpage extends StatelessWidget {
   final List recipeList;
+  final Function(String) removeRecipe;
 
-  const RecipeSubpage({super.key, required this.recipeList});
+  const RecipeSubpage({super.key, required this.recipeList, required this.removeRecipe});
 
   @override
   Widget build(BuildContext context) {
@@ -20,6 +21,7 @@ class RecipeSubpage extends StatelessWidget {
               return Recipe(
                 name: recipeList[index][0],
                 ingredients: recipeList[index][1],
+                removeRecipe: removeRecipe,
               );
             },
           ),
